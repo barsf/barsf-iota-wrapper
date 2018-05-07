@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+
+
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+
+    <properties>
+        <property name="driver" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://localhost:3306/iota"/>
+        <!--<property name="url" value="jdbc:mysql://google/iota?cloudSqlInstance=m1120901032:asia-east1:barsf&amp;socketFactory=com.google.cloud.sql.mysql.SocketFactory"/>-->
+        <property name="username" value="root"/>
+        <property name="password" value="root"/>
+    </properties>
+
+
+    <settings>
+        <!--&lt;!&ndash; 打印查询语句 &ndash;&gt;-->
+        <!--<setting name="logImpl" value="STDOUT_LOGGING" />-->
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+    </settings>
+
+    <!--<plugins>-->
+        <!--&lt;!&ndash; 打印执行时间 &ndash;&gt;-->
+        <!--<plugin interceptor="com.iota.iri.storage.innoDB.mybatis.SqlCostInterceptor" />-->
+    <!--</plugins>-->
+
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <dataSource type="cn.zhonggu.barsf.iri.storage.innoDB.mybatis.HikariDBSourceFactory">
+                <property name="driverClassName" value="${driver}"/>
+                <property name="jdbcUrl" value="${url}"/>
+                <property name="username" value="${username}"/>
+                <property name="password" value="${password}"/>
+                <property name="maximumPoolSize" value="80"/>
+                <property name="minimumIdle" value="6"/>
+                <property name="connectionTestQuery" value="select 1"/>
+                <property name="autoCommit" value="true"/>
+                <property name="dataSource.cachePrepStmts" value="true"/>
+                <property name="dataSource.prepStmtCacheSize" value="250"/>
+                <property name="dataSource.prepStmtCacheSqlLimit" value="3048"/>
+                <property name="dataSource.useServerPrepStmts" value="true"/>
+                <property name="dataSource.useLocalSessionState" value="true"/>
+                <property name="dataSource.useLocalTransactionState" value="true"/>
+                <property name="dataSource.rewriteBatchedStatements" value="true"/>
+                <property name="dataSource.cacheResultSetMetadata" value="true"/>
+                <property name="dataSource.cacheServerConfiguration" value="true"/>
+                <property name="dataSource.elideSetAutoCommits" value="true"/>
+                <property name="dataSource.maintainTimeStats" value="false"/>
+            </dataSource>
+
+            <!--<dataSource type="POOLED">-->
+                <!--<property name="driver" value="${driver}"/>-->
+                <!--<property name="url" value="${url}"/>-->
+                <!--<property name="username" value="${username}"/>-->
+                <!--<property name="password" value="${password}"/>-->
+            <!--</dataSource>-->
+        </environment>
+    </environments>
+
+
+</configuration>
