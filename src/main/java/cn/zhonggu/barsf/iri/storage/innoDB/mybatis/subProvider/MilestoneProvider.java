@@ -1,6 +1,7 @@
 package cn.zhonggu.barsf.iri.storage.innoDB.mybatis.subProvider;
 
 import cn.zhonggu.barsf.iri.modelWrapper.MilestoneWrapper;
+import cn.zhonggu.barsf.iri.storage.innoDB.NeededException;
 import cn.zhonggu.barsf.iri.storage.innoDB.mybatis.DbHelper;
 import cn.zhonggu.barsf.iri.storage.innoDB.mybatis.modelMapper.MilestoneMapper;
 import com.iota.iri.model.Hash;
@@ -44,6 +45,7 @@ public class MilestoneProvider implements SubPersistenceProvider {
     }
 
     public boolean save(Persistable thing, Indexable index, SqlSession outSession, boolean mergeMode) {
+        LOG.debug("save new Milestone:" + ((IntegerIndex) index).getValue());
         if (outSession == null) {
             return save(thing, index);
         }
@@ -55,6 +57,7 @@ public class MilestoneProvider implements SubPersistenceProvider {
     }
 
     public boolean save(Persistable thing, Indexable index) {
+        LOG.debug("save new Milestone:" + ((IntegerIndex) index).getValue());
         try (final SqlSession session = this.sessionFactory.openSession(true)) {
             MilestoneMapper mapper = session.getMapper(MilestoneMapper.class);
             MilestoneWrapper target = new MilestoneWrapper((Milestone) thing);
@@ -83,28 +86,18 @@ public class MilestoneProvider implements SubPersistenceProvider {
 
     @Override
     public boolean update(Persistable model, Indexable index, String item) throws Exception {
-        try (final SqlSession session = this.sessionFactory.openSession(true)) {
-            MilestoneMapper mapper = session.getMapper(MilestoneMapper.class);
-            int effect = mapper.updateByPrimaryKey((MilestoneWrapper) model);
-            return true;
-        }
+        throw new NeededException();
     }
 
     public boolean exists(Indexable key, SqlSession session) throws Exception {
-        if (session == null){
-            return exists(key);
-        }
-
-        MilestoneMapper mapper = session.getMapper(MilestoneMapper.class);
-        return mapper.existsWithPrimaryKey(converterIndexableToStr(key));
+        // 只有trans会查询exists
+        throw new NeededException();
     }
 
     @Override
     public boolean exists(Indexable key) throws Exception {
-        try (final SqlSession session = this.sessionFactory.openSession(true)) {
-            MilestoneMapper mapper = session.getMapper(MilestoneMapper.class);
-            return mapper.existsWithPrimaryKey(converterIndexableToStr(key));
-        }
+        // 只有trans会查询exists
+        throw new NeededException();
     }
 
 
@@ -180,6 +173,7 @@ public class MilestoneProvider implements SubPersistenceProvider {
         try (final SqlSession session = this.sessionFactory.openSession(true)) {
             MilestoneMapper mapper = session.getMapper(MilestoneMapper.class);
             MilestoneWrapper value = mapper.next(converterIndexableToStr(index));
+            LOG.debug(" next Milestone:" + (value != null ? value.getIndex() : "null"));
             if (value != null) {
                 Indexable indexNext = new IntegerIndex(value.getIndex());
                 return new Pair<>(indexNext, value.toMilestone());

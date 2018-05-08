@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration scan="true" scanPeriod="30 minutes" packagingData="true">
 	<!--用于区分不同应用程序的记录-->
-	<contextName>edu-cloud</contextName>
-	<!--日志文件所在目录，如果是tomcat，如下写法日志文件会在则为${TOMCAT_HOME}/bin/logs/目录下-->
+	<contextName>barsf-iri</contextName>
 	<property name="LOG_HOME" value="logs"/>
 
 	<!--控制台-->
@@ -17,7 +16,6 @@
 
 	<!--滚动文件-->
 	<appender name="infoFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<!-- ThresholdFilter:临界值过滤器，过滤掉 TRACE 和 DEBUG 级别的日志 -->
 		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
 			<level>INFO</level>
 		</filter>
@@ -33,7 +31,6 @@
 
 	<!--滚动文件-->
 	<appender name="errorFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<!-- ThresholdFilter:临界值过滤器，过滤掉 TRACE 和 DEBUG 级别的日志 -->
 		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
 			<level>error</level>
 		</filter>
@@ -46,6 +43,40 @@
 			<pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%thread] %-5level %logger{36} : %msg%n</pattern>
 		</encoder>
 	</appender>
+
+	<appender name="debugFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>INFO</level>
+			<onMatch>DENY</onMatch>
+			<onMismatch>NEUTRAL</onMismatch>
+		</filter>
+
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>WARN</level>
+			<onMatch>DENY</onMatch>
+			<onMismatch>NEUTRAL</onMismatch>
+		</filter>
+
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>ERROR</level>
+			<onMatch>DENY</onMatch>
+			<onMismatch>NEUTRAL</onMismatch>
+		</filter>
+
+
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>debug</level>
+		</filter>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${LOG_HOME}/debug.%d{yyyy-MM-dd}.log</fileNamePattern>
+			<maxHistory>30</maxHistory><!--保存最近30天的日志-->
+		</rollingPolicy>
+		<encoder>
+			<charset>UTF-8</charset>
+			<pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%thread] %-5level %logger{36} : %msg%n</pattern>
+		</encoder>
+	</appender>
+
 
 	<!--将日志输出到logstack-->
 	<!--<appender name="logstash" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
@@ -63,7 +94,7 @@
 		<!--<appender-ref ref="stdout"/>-->
 		<appender-ref ref="infoFile"/>
 		<appender-ref ref="errorFile"/>
-		<appender-ref ref="logstash"/>
+		<appender-ref ref="debugFile"/>
 	</root>
 
 	<!--  root level="INFO"> <appender-ref ref="STDOUT" /> </root> -->

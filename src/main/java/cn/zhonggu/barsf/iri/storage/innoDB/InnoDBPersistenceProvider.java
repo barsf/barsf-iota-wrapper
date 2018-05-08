@@ -341,8 +341,8 @@ public class InnoDBPersistenceProvider implements PersistenceProvider {
                 Persistable thing = model.hi;
                 Indexable index = model.low;
                 if (thing instanceof Transaction) {
-                    List<Pair<Indexable, Persistable>> temp = new ArrayList<Pair<Indexable, Persistable>>();
-                    temp.add(new Pair<Indexable, Persistable>(index, thing));
+                    List<Pair<Indexable, Persistable>> temp = new ArrayList<>();
+                    temp.add(new Pair<>(index, thing));
                     transactionProvider.saveInBatch(temp, true, session);
                     mainHash = index;
 

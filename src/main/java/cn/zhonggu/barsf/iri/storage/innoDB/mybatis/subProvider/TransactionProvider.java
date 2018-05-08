@@ -110,8 +110,12 @@ public class TransactionProvider implements SubPersistenceProvider {
                 exMapper.insert(transactionEx);
             }
         }
-        synchronized (this) {
-            totalTransaction += transactionCacheLis.size();
+        if (totalTransaction != -1) {
+            synchronized (this) {
+                LOG.debug(" size of transCL:"+transactionCacheLis.size());
+                totalTransaction += transactionCacheLis.size();
+                LOG.debug(" current size:"+totalTransaction);
+            }
         }
         return true;
     }
