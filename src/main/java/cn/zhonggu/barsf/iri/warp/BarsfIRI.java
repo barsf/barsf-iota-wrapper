@@ -3,7 +3,6 @@ package cn.zhonggu.barsf.iri.warp;
 import cn.zhonggu.barsf.iri.analysis.TransactionAnalysisRunner;
 import com.iota.iri.IXI;
 import com.iota.iri.conf.Configuration;
-import com.iota.iri.service.API;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,13 +18,11 @@ public class BarsfIRI extends com.iota.iri.IRI {
     public static void main(String[] args) throws IOException {
         configuration = new Configuration();
         validateParams(configuration, args);
-        // 源码添加功能
-        WipeAndLoadFromRDB();
 
         log.info("Welcome to {} {}", configuration.booling(Configuration.DefaultConfSettings.TESTNET) ? TESTNET_NAME : MAINNET_NAME, VERSION);
         iota = new IotaWrapper(configuration);
         ixi = new IXI(iota);
-        api = new API(iota, ixi);
+        APIWrapper apiWrapper = new APIWrapper(iota, ixi);
         shutdownHook();
 
         if (configuration.booling(Configuration.DefaultConfSettings.DEBUG)) {
@@ -57,7 +54,7 @@ public class BarsfIRI extends com.iota.iri.IRI {
 
         try {
             iota.init();
-            api.init();
+            apiWrapper.init();
             ixi.init(configuration.string(Configuration.DefaultConfSettings.IXI_DIR));
         } catch (final Exception e) {
             log.error("Exception during IOTA node initialisation: ", e);
@@ -68,24 +65,6 @@ public class BarsfIRI extends com.iota.iri.IRI {
         // =============================== iota 节点启动完毕 ======================================
         // 自启动任务
         TransactionAnalysisRunner.selfCall();
-    }
-
-    private static void WipeAndLoadFromRDB() {
-//        boolean wipeAndLoadFromRdb = configuration.string(DefaultConfSettings.LOAD) != null;
-//
-//        try {
-//            if (wipeAndLoadFromRdb) {
-//                RodbDataFishingRunner.selfCall();
-//            } else {
-//                synced = true;
-//            }
-//
-//            while (!synced) {
-//                Thread.sleep(20000);
-//            }
-//        }catch (Exception e){
-//            log.error("WipeAndLoadFromRDB failed",e);
-//        }
     }
 
     private static void shutdownHook() {

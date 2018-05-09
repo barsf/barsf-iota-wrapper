@@ -4,6 +4,8 @@
       <root url="jar://G:/Work/iri-1.4.2.4/target/iri-1.4.2.4.jar!/" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES />
+    <SOURCES>
+      <root url="jar://G:/Work/iri-1.4.2.4/target/iri-1.4.2.4-sources.jar!/" />
+    </SOURCES>
   </library>
 </component>

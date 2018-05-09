@@ -3,11 +3,12 @@ package cn.zhonggu.barsf.iri.analysis;
 import cn.zhonggu.barsf.iri.modelWrapper.*;
 import cn.zhonggu.barsf.iri.storage.innoDB.mybatis.DbHelper;
 import cn.zhonggu.barsf.iri.storage.innoDB.mybatis.subProvider.*;
-import com.iota.iri.model.Hash;
-import com.iota.iri.model.IntegerIndex;
+import com.iota.iri.model.*;
+import com.iota.iri.model.ObsoleteTag;
 import com.iota.iri.storage.Indexable;
 import com.iota.iri.storage.Persistable;
 import com.iota.iri.utils.Pair;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
@@ -39,8 +40,8 @@ public class RodbDataFishingRunner implements Runnable {
     private ColumnFamilyHandle addressHandle;
     private ColumnFamilyHandle approveeHandle;
     private ColumnFamilyHandle bundleHandle;
+    private ColumnFamilyHandle obsoleteTagHandle;
     private ColumnFamilyHandle tagHandle;
-    private List<ColumnFamilyHandle> transactionGetList;
 
     private ArrayList<Class> classes = new ArrayList<>();
 
@@ -60,7 +61,7 @@ public class RodbDataFishingRunner implements Runnable {
     private static final int TASK_COUNT = 6; //启动线程的最大数量
     private static final FutureTask<Boolean>[] SYNC_FUTURES = new FutureTask[TASK_COUNT]; // 执行任务内核
     private static final ExecutorService EXECUTOR_SERVICE = Executors.newFixedThreadPool(TASK_COUNT); //线程池
-    public static boolean synced;
+    public static volatile boolean synced;
 
     public RodbDataFishingRunner() throws Exception {
         skip = new HashMap<>();
@@ -77,27 +78,27 @@ public class RodbDataFishingRunner implements Runnable {
         // init LastONeMAp
         initLastOneMap();
 
-        classes.add(TransactionWrapper.class);
-        classes.add(MilestoneWrapper.class);
-        classes.add(StateDiffWrapper.class);
+        classes.add(Transaction.class);
+        classes.add(Milestone.class);
+        classes.add(StateDiff.class);
 //        classes.add(Address.class);
 //        classes.add(Approvee.class);
 //        classes.add(Bundle.class);
-//        classes.add(TagWrapper.class);
+//        classes.add(Tag.class);
 //
 //        selfDebug(Transaction.class);
 //        selfDebug(Milestone.class);
-//        selfDebug(StateDiffWrapper.class);
+//        selfDebug(StateDiff.class);
 //        selfDebug(Address.class);
 //        selfDebug(Approvee.class);
 //        selfDebug(Bundle.class);
-//        selfDebug(TagWrapper.class);
+//        selfDebug(Tag.class);
     }
 
 
     public static void selfCall() throws Exception {
         ScheduledExecutorService singleTread = Executors.newSingleThreadScheduledExecutor();
-        singleTread.scheduleWithFixedDelay(new cn.zhonggu.barsf.iri.analysis.RodbDataFishingRunner(), 2, 2, TimeUnit.SECONDS);
+        singleTread.scheduleWithFixedDelay(new RodbDataFishingRunner(), 2, 2, TimeUnit.SECONDS);
     }
 
 
@@ -109,15 +110,7 @@ public class RodbDataFishingRunner implements Runnable {
             synced = true;
 
             // 完成关闭连接
-            if (db != null) {
-                for (final ColumnFamilyHandle columnFamilyHandle : columnFamilyHandles) {
-                    columnFamilyHandle.close();
-                }
-                db.close();
-                db = null;
-                options.close();
-                bloomFilter.close();
-            }
+            shutdown();
 
             return;
         }
@@ -149,9 +142,8 @@ public class RodbDataFishingRunner implements Runnable {
                 lastOne = entry.getKey();
             }
 
-            final cn.zhonggu.barsf.iri.analysis.KvEnum[] key = {tellMeWhatIsTheKey(nowClass)};
+            final KvEnum[] key = {tellMeWhatIsTheKey(nowClass)};
 
-            // TODO: 2018/4/27  事物不能分离  需要修改
 
             // 多线程处理记录
             for (int i = 0; i < TASK_COUNT; i++) {
@@ -280,7 +272,7 @@ public class RodbDataFishingRunner implements Runnable {
 
     private LinkedHashMap<Indexable, ArrayList<byte[]>> getFromRdb(Class<?> model, Indexable index) throws Exception {
         LinkedHashMap<Indexable, ArrayList<byte[]>> retList = new LinkedHashMap<>();
-        RocksIterator iterator = db.newIterator(classTreeMap.get().get(model));
+        RocksIterator iterator = db.newIterator(classTreeMap.get(model));
         if (index == Hash.NULL_HASH) {
             if (model == MilestoneWrapper.class) {
                 index = new IntegerIndex(0);
@@ -297,7 +289,7 @@ public class RodbDataFishingRunner implements Runnable {
             Indexable indexable = index.getClass().newInstance();
             indexable.read(iterator.key());
             values.add(0, iterator.value());
-            ColumnFamilyHandle referenceHandle = metadataReference.get().get(model);
+            ColumnFamilyHandle referenceHandle = metadataReference.get(model);
             if (referenceHandle != null) {
                 byte[] value2 = db.get(referenceHandle, iterator.key());
                 values.add(1, value2);
@@ -313,7 +305,7 @@ public class RodbDataFishingRunner implements Runnable {
 
     public void selfDebug(Class model) {
         LinkedHashMap<Indexable, Persistable> retList = new LinkedHashMap<Indexable, Persistable>();
-        RocksIterator iterator = db.newIterator(classTreeMap.get().get(model));
+        RocksIterator iterator = db.newIterator(classTreeMap.get(model));
         iterator.seekToFirst();
         log.info(" 数据检查:" + model);
         int count = 0;
@@ -422,9 +414,8 @@ public class RodbDataFishingRunner implements Runnable {
         db = RocksDB.open(options, "mainnetdb", columnFamilyDescriptors, columnFamilyHandles);
         db.enableFileDeletions(true);
 
-        fillmodelColumnHandles();
+        fillModelColumnHandles();
     }
-
     private final List<String> columnFamilyNames = Arrays.asList(
             new String(RocksDB.DEFAULT_COLUMN_FAMILY),
             "transaction",
@@ -434,10 +425,11 @@ public class RodbDataFishingRunner implements Runnable {
             "address",
             "approvee",
             "bundle",
+            "obsoleteTag",
             "tag"
     );
 
-    private void fillmodelColumnHandles() throws Exception {
+    private void fillModelColumnHandles() throws Exception {
         int i = 0;
         transactionHandle = columnFamilyHandles.get(++i);
         transactionMetadataHandle = columnFamilyHandles.get(++i);
@@ -446,39 +438,36 @@ public class RodbDataFishingRunner implements Runnable {
         addressHandle = columnFamilyHandles.get(++i);
         approveeHandle = columnFamilyHandles.get(++i);
         bundleHandle = columnFamilyHandles.get(++i);
+        obsoleteTagHandle = columnFamilyHandles.get(++i);
         tagHandle = columnFamilyHandles.get(++i);
-        //hashesHandle = familyHandles.get(++i);
 
         for (; ++i < columnFamilyHandles.size(); ) {
             db.dropColumnFamily(columnFamilyHandles.get(i));
         }
-
-        transactionGetList = new ArrayList<>();
-        for (i = 1; i < 5; i++) {
-            transactionGetList.add(columnFamilyHandles.get(i));
-        }
     }
 
 
-    private final AtomicReference<Map<Class<?>, ColumnFamilyHandle>> classTreeMap = new AtomicReference<>();
-    private final AtomicReference<Map<Class<?>, Indexable>> lastIndexMap = new AtomicReference<>();
-    private final AtomicReference<Map<Class<?>, ColumnFamilyHandle>> metadataReference = new AtomicReference<>();
 
-    private void initClassTreeMap() throws RocksDBException {
-        Map<Class<?>, ColumnFamilyHandle> classMap = new HashMap<>();
-        classMap.put(TransactionWrapper.class, transactionHandle);
-        classMap.put(MilestoneWrapper.class, milestoneHandle);
-        classMap.put(StateDiffWrapper.class, stateDiffHandle);
-        classMap.put(AddressWrapper.class, addressHandle);
-        classMap.put(ApproveeWrapper.class, approveeHandle);
-        classMap.put(BundleWrapper.class, bundleHandle);
-        classMap.put(TagWrapper.class, tagHandle);
-        classTreeMap.set(classMap);
+    private final AtomicReference<Map<Class<?>, Indexable>> lastIndexMap = new AtomicReference<>();
+    private Map<Class<?>, ColumnFamilyHandle> classTreeMap;
+    private Map<Class<?>, ColumnFamilyHandle> metadataReference;
+
+
+    private void initClassTreeMap() {
+        Map<Class<?>, ColumnFamilyHandle> classMap = new LinkedHashMap<>();
+        classMap.put(Transaction.class, transactionHandle);
+        classMap.put(Milestone.class, milestoneHandle);
+        classMap.put(StateDiff.class, stateDiffHandle);
+        classMap.put(Address.class, addressHandle);
+        classMap.put(Approvee.class, approveeHandle);
+        classMap.put(Bundle.class, bundleHandle);
+        classMap.put(ObsoleteTag.class, obsoleteTagHandle);
+        classMap.put(Tag.class, tagHandle);
+        classTreeMap = classMap;
 
         Map<Class<?>, ColumnFamilyHandle> metadataHashMap = new HashMap<>();
-        metadataHashMap.put(TransactionWrapper.class, transactionMetadataHandle);
-        metadataReference.set(metadataHashMap);
-
+        metadataHashMap.put(Transaction.class, transactionMetadataHandle);
+        metadataReference = metadataHashMap;
     }
 
     private void initLastOneMap() {
@@ -514,6 +503,12 @@ public class RodbDataFishingRunner implements Runnable {
         this.kvProvider = KvProvider.getInstance();
     }
 
+    public void shutdown() {
+        for (final ColumnFamilyHandle columnFamilyHandle : columnFamilyHandles) {
+            IOUtils.closeQuietly(columnFamilyHandle::close);
+        }
+        IOUtils.closeQuietly(db::close, options::close, bloomFilter::close);
+    }
 }
 
 enum KvEnum {

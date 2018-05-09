@@ -12,7 +12,6 @@ import com.iota.iri.storage.ZmqPublishProvider;
  * Created by paul on 5/19/17.
  */
 public class IotaWrapper extends com.iota.iri.Iota {
-
     public IotaWrapper(Configuration configuration) {
         super(configuration);
     }

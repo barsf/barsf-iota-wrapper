@@ -9,8 +9,8 @@
 
     <properties>
         <property name="driver" value="com.mysql.jdbc.Driver"/>
-        <property name="url" value="jdbc:mysql://localhost:3306/iota"/>
-        <!--<property name="url" value="jdbc:mysql://google/iota?cloudSqlInstance=m1120901032:asia-east1:barsf&amp;socketFactory=com.google.cloud.sql.mysql.SocketFactory"/>-->
+        <!--<property name="url" value="jdbc:mysql://localhost:3306/iota"/>-->
+        <property name="url" value="jdbc:mysql://google/iota?cloudSqlInstance=m1120901032:asia-east1:barsf&amp;socketFactory=com.google.cloud.sql.mysql.SocketFactory"/>
         <property name="username" value="root"/>
         <property name="password" value="root"/>
     </properties>
@@ -19,6 +19,7 @@
     <settings>
         <!--&lt;!&ndash; 打印查询语句 &ndash;&gt;-->
         <!--<setting name="logImpl" value="STDOUT_LOGGING" />-->
+        <!--驼峰规则-->
         <setting name="mapUnderscoreToCamelCase" value="true"/>
     </settings>
 

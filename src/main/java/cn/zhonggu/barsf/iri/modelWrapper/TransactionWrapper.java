@@ -358,7 +358,9 @@ public class TransactionWrapper{
 
 
     public Transaction toTransaction(){
+        // 22 个变量
         Transaction transaction = new Transaction();
+        transaction.bytes = this.bytes;
         transaction.address = this.address;
         transaction.bundle = this.bundle;
         transaction.trunk = this.trunk;

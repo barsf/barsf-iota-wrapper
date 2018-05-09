@@ -1,7 +1,0 @@
-[2018-05-07 15:25:47.360] [XNIO-1 task-21] ERROR com.iota.iri.network.Node : 'udp://iotafield2.dontexist.net:14600' is not a valid uri schema or resolvable address.
-[2018-05-07 15:27:36.266] [XNIO-1 task-4] ERROR com.iota.iri.network.Node : 'udp://node.iota.dance:14600' is not a valid uri schema or resolvable address.
-[2018-05-07 15:28:48.037] [XNIO-1 task-1] ERROR com.iota.iri.network.Node : 'udp://mainnet3.deviota.com:14600' is not a valid uri schema or resolvable address.
-[2018-05-07 15:38:52.617] [XNIO-1 task-26] ERROR com.iota.iri.network.Node : 'udp://mainnet3.deviota.com:14600' is not a valid uri schema or resolvable address.
-[2018-05-07 15:39:01.015] [XNIO-1 task-31] ERROR com.iota.iri.network.Node : 'udp://iotafield2.dontexist.net:14600' is not a valid uri schema or resolvable address.
-[2018-05-07 15:40:24.111] [XNIO-1 task-7] ERROR com.iota.iri.network.Node : 'udp://iotadesert.ddns.net:14600' is not a valid uri schema or resolvable address.
-[2018-05-07 15:41:02.053] [XNIO-1 task-27] ERROR com.iota.iri.network.Node : 'udp://iota-au.pathin.net:14600' is not a valid uri schema or resolvable address.

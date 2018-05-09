@@ -78,24 +78,15 @@
 	</appender>
 
 
-	<!--将日志输出到logstack-->
-	<!--<appender name="logstash" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
-        <destination>47.93.173.81:7002</destination>
-        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
-            <charset>UTF-8</charset>
-        </encoder>
-        <keepAliveDuration>5 minutes</keepAliveDuration>
-    </appender>-->
-
-	<!--这里如果是info，spring、mybatis等框架则不会输出：TRACE < DEBUG < INFO <  WARN < ERROR-->
-	<!--root是所有logger的祖先，均继承root，如果某一个自定义的logger没有指定level，就会寻找
-    父logger看有没有指定级别，直到找到root。-->
+	<!--默认级别-->
 	<root level="debug">
-		<!--<appender-ref ref="stdout"/>-->
 		<appender-ref ref="infoFile"/>
 		<appender-ref ref="errorFile"/>
 		<appender-ref ref="debugFile"/>
 	</root>
 
-	<!--  root level="INFO"> <appender-ref ref="STDOUT" /> </root> -->
+	<!--控制mybatis日志级别-->
+	<logger name="cn.zhonggu.barsf.iri.storage.innoDB.mybatis" level="INFO" additivity="false" />
+	<logger name="org.apache.ibatis" level="INFO"  additivity="false"/>
+
 </configuration>

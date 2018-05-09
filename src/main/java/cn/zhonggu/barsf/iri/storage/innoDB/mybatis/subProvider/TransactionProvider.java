@@ -151,7 +151,6 @@ public class TransactionProvider implements SubPersistenceProvider {
 
     @Override
     public boolean update(Persistable model, Indexable index, String item) throws Exception {
-        LOG.info("ZZZ " + Thread.currentThread().getName() + " updateSelective :" + item);
         TransactionProvider transactionProvider = TransactionProvider.getInstance();
         Transaction target = (Transaction) model;
         TransactionWrapper emptyTrasn = TransactionWrapper.emptyTrans(converterIndexableToStr(index));
