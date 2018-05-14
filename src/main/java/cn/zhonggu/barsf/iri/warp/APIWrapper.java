@@ -225,7 +225,9 @@ public class APIWrapper {
                         AddressMapper mapper = session.getMapper(AddressMapper.class);
                         for (String address : addresses) {
                             AddressWrapper anAddress = mapper.selectByPrimaryKey(address);
-                            resultMap.put(anAddress.getHash(), anAddress);
+                            if(anAddress!=null) {
+                                resultMap.put(anAddress.getHash(), anAddress);
+                            }
                         }
                     }
 
