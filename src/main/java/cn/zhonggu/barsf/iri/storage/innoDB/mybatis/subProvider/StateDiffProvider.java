@@ -89,14 +89,14 @@ public class StateDiffProvider implements SubPersistenceProvider {
         return true;
     }
 
-    @Override
+    
     public void delete(Indexable index) throws Exception {
         try (final SqlSession session = this.sessionFactory.openSession(true)) {
             int effect = session.delete(converterIndexableToStr(index));
         }
     }
 
-    @Override
+    
     public boolean update(Persistable model, Indexable index, String item) throws Exception {
         try (final SqlSession session = this.sessionFactory.openSession(true)) {
             StateDiffMapper mapper = session.getMapper(StateDiffMapper.class);
@@ -113,7 +113,7 @@ public class StateDiffProvider implements SubPersistenceProvider {
         return true;
     }
 
-    @Override
+    
     public boolean exists(Indexable key) throws Exception {
         try (final SqlSession session = this.sessionFactory.openSession(true)) {
             StateDiffMapper mapper = session.getMapper(StateDiffMapper.class);
@@ -128,7 +128,7 @@ public class StateDiffProvider implements SubPersistenceProvider {
         return object != null;
     }
 
-    @Override
+    
     public Pair<Indexable, Persistable> latest(Class<?> indexModel) throws Exception {
         try (final SqlSession session = this.sessionFactory.openSession(true)) {
             StateDiffMapper mapper = session.getMapper(StateDiffMapper.class);
@@ -148,12 +148,12 @@ public class StateDiffProvider implements SubPersistenceProvider {
         return new Pair<>(null, null);
     }
 
-    @Override
+    
     public Set<Indexable> keysWithMissingReferences(Class<?> otherClass) throws Exception {
         return null;
     }
 
-    @Override
+    
     public Persistable get(Indexable index) throws Exception {
         try (final SqlSession session = this.sessionFactory.openSession(true)) {
             StateDiffMapper mapper = session.getMapper(StateDiffMapper.class);
@@ -162,12 +162,12 @@ public class StateDiffProvider implements SubPersistenceProvider {
         }
     }
 
-    @Override
+    
     public boolean mayExist(Indexable index) throws Exception {
         return exists(index);
     }
 
-    @Override
+    
     public long count() throws Exception {
         try (final SqlSession session = this.sessionFactory.openSession(true)) {
             StateDiffMapper mapper = session.getMapper(StateDiffMapper.class);
@@ -175,7 +175,7 @@ public class StateDiffProvider implements SubPersistenceProvider {
         }
     }
 
-    @Override
+    
     public Set<Indexable> keysStartingWith(byte[] value) {
         try (final SqlSession session = this.sessionFactory.openSession(true)) {
             StateDiffMapper mapper = session.getMapper(StateDiffMapper.class);
@@ -188,7 +188,7 @@ public class StateDiffProvider implements SubPersistenceProvider {
         }
     }
 
-    @Override
+    
     public Persistable seek(byte[] key) throws Exception {
         Indexable out;
         Set<Indexable> hashes = keysStartingWith(key);
@@ -203,7 +203,7 @@ public class StateDiffProvider implements SubPersistenceProvider {
         return get(out);
     }
 
-    @Override
+    
     public Pair<Indexable, Persistable> next(Indexable index) throws Exception {
         try (final SqlSession session = this.sessionFactory.openSession(true)) {
             StateDiffMapper mapper = session.getMapper(StateDiffMapper.class);
@@ -222,7 +222,7 @@ public class StateDiffProvider implements SubPersistenceProvider {
         return new Pair<>(null, null);
     }
 
-    @Override
+    
     public Pair<Indexable, Persistable> previous(Indexable index) throws Exception {
         try (final SqlSession session = this.sessionFactory.openSession(true)) {
             StateDiffMapper mapper = session.getMapper(StateDiffMapper.class);
@@ -241,7 +241,7 @@ public class StateDiffProvider implements SubPersistenceProvider {
         return new Pair<>(null, null);
     }
 
-    @Override
+    
     public Pair<Indexable, Persistable> first(Class<?> indexModel) throws Exception {
         try (final SqlSession session = this.sessionFactory.openSession(true)) {
             StateDiffMapper mapper = session.getMapper(StateDiffMapper.class);

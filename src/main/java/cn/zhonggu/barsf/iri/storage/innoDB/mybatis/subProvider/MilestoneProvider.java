@@ -76,7 +76,6 @@ public class MilestoneProvider implements SubPersistenceProvider {
         return true;
     }
 
-    @Override
     public void delete(Indexable index) throws Exception {
         try (final SqlSession session = this.sessionFactory.openSession(true)) {
             MilestoneMapper mapper = session.getMapper(MilestoneMapper.class);
@@ -84,7 +83,6 @@ public class MilestoneProvider implements SubPersistenceProvider {
         }
     }
 
-    @Override
     public boolean update(Persistable model, Indexable index, String item) throws Exception {
         throw new NeededException();
     }
@@ -94,14 +92,12 @@ public class MilestoneProvider implements SubPersistenceProvider {
         throw new NeededException();
     }
 
-    @Override
     public boolean exists(Indexable key) throws Exception {
         // 只有trans会查询exists
         throw new NeededException();
     }
 
 
-    @Override
     public Pair<Indexable, Persistable> latest(Class<?> indexModel) throws Exception {
         try (final SqlSession session = this.sessionFactory.openSession(true)) {
             MilestoneMapper mapper = session.getMapper(MilestoneMapper.class);
@@ -115,12 +111,10 @@ public class MilestoneProvider implements SubPersistenceProvider {
         return new Pair<>(null, null);
     }
 
-    @Override
     public Set<Indexable> keysWithMissingReferences(Class<?> otherClass) throws Exception {
         return null;
     }
 
-    @Override
     public Persistable get(Indexable index) throws Exception {
         try (final SqlSession session = this.sessionFactory.openSession(true)) {
             MilestoneMapper mapper = session.getMapper(MilestoneMapper.class);
@@ -129,12 +123,10 @@ public class MilestoneProvider implements SubPersistenceProvider {
         }
     }
 
-    @Override
     public boolean mayExist(Indexable index) throws Exception {
         return exists(index);
     }
 
-    @Override
     public long count() throws Exception {
         try (final SqlSession session = this.sessionFactory.openSession(true)) {
             MilestoneMapper mapper = session.getMapper(MilestoneMapper.class);
@@ -142,7 +134,6 @@ public class MilestoneProvider implements SubPersistenceProvider {
         }
     }
 
-    @Override
     public Set<Indexable> keysStartingWith(byte[] value) {
         try (final SqlSession session = this.sessionFactory.openSession(true)) {
             MilestoneMapper mapper = session.getMapper(MilestoneMapper.class);
@@ -154,7 +145,6 @@ public class MilestoneProvider implements SubPersistenceProvider {
         }
     }
 
-    @Override
     public Persistable seek(byte[] key) throws Exception {
         Indexable out;
         Set<Indexable> hashes = keysStartingWith(key);
@@ -168,7 +158,6 @@ public class MilestoneProvider implements SubPersistenceProvider {
         return get(out);
     }
 
-    @Override
     public Pair<Indexable, Persistable> next(Indexable index) throws Exception {
         try (final SqlSession session = this.sessionFactory.openSession(true)) {
             MilestoneMapper mapper = session.getMapper(MilestoneMapper.class);
@@ -182,7 +171,6 @@ public class MilestoneProvider implements SubPersistenceProvider {
         return new Pair<>(null, null);
     }
 
-    @Override
     public Pair<Indexable, Persistable> previous(Indexable index) throws Exception {
         try (final SqlSession session = this.sessionFactory.openSession(true)) {
             MilestoneMapper mapper = session.getMapper(MilestoneMapper.class);
@@ -196,7 +184,6 @@ public class MilestoneProvider implements SubPersistenceProvider {
         return new Pair<>(null, null);
     }
 
-    @Override
     public Pair<Indexable, Persistable> first(Class<?> indexModel) throws Exception {
         try (final SqlSession session = this.sessionFactory.openSession(true)) {
             MilestoneMapper mapper = session.getMapper(MilestoneMapper.class);

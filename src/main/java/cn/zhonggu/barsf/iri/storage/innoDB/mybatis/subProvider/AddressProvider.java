@@ -47,13 +47,9 @@ public class AddressProvider implements SubPersistenceProvider {
 
     public boolean save(Persistable thing, Indexable index, SqlSession outSession) {
         // 地址处理使用
-        if (outSession != null) {
-            AddressMapper addressMapper = outSession.getMapper(AddressMapper.class);
-            ((AddressWrapper) thing).setHash(converterIndexableToStr(index));
-            return addressMapper.insertOrUpdate((AddressWrapper) thing) > 0;
-        } else {
-            return false;
-        }
+        AddressMapper addressMapper = outSession.getMapper(AddressMapper.class);
+        ((AddressWrapper) thing).setHash(converterIndexableToStr(index));
+        return addressMapper.insertOrUpdate((AddressWrapper) thing) > 0;
     }
 
 
@@ -66,17 +62,14 @@ public class AddressProvider implements SubPersistenceProvider {
         throw new NeededException();
     }
 
-    @Override
     public void delete(Indexable index) throws Exception {
     }
 
-    @Override
     public boolean update(Persistable model, Indexable index, String item) throws Exception {
         // 当前版本没有对Approvee的直接更新
         throw new NeededException();
     }
 
-    @Override
     public boolean exists(Indexable key) throws Exception {
         // 只有trans/milestone使用
         throw new NeededException();
@@ -86,19 +79,17 @@ public class AddressProvider implements SubPersistenceProvider {
         throw new NeededException();
     }
 
-    @Override
     public Pair<Indexable, Persistable> latest(Class<?> indexModel) throws Exception {
         // 只有里程碑使用
         throw new NeededException();
     }
 
-    @Override
     public Set<Indexable> keysWithMissingReferences(Class<?> otherClass) throws Exception {
         return null;
     }
 
-    @Override
-    public Persistable get(Indexable index) throws Exception {
+    /* 提供给原生iri使用,从transaction表中获取address数据  不会返回空值 */
+    public Persistable getFromTransaction(Indexable index) throws Exception {
         try (final SqlSession session = this.sessionFactory.openSession(true)) {
             TransactionMapper mapper = session.getMapper(TransactionMapper.class);
             List<String> hashOfTransByTag = mapper.selectHashesByAddress(converterIndexableToStr(index));
@@ -110,41 +101,40 @@ public class AddressProvider implements SubPersistenceProvider {
         }
     }
 
-    @Override
+    /* 从t_address表中获取address数据  会返回空值 */
+    public AddressWrapper get(String addressHash, SqlSession session) {
+        AddressMapper mapper = session.getMapper(AddressMapper.class);
+        return mapper.selectByPrimaryKey(addressHash);
+    }
+
     public boolean mayExist(Indexable index) throws Exception {
         return exists(index);
     }
 
-    @Override
     public long count() throws Exception {
         // 只有trans使用
         throw new NeededException();
     }
 
-    @Override
     public Set<Indexable> keysStartingWith(byte[] value) {
         throw new NeededException();
     }
 
-    @Override
     public Persistable seek(byte[] key) throws Exception {
         // 只有trans使用
         throw new NeededException();
     }
 
-    @Override
     public Pair<Indexable, Persistable> next(Indexable index) throws Exception {
         // rescrn操作使用, 实际什么都不用做
         return new Pair<>(null, null);
     }
 
-    @Override
     public Pair<Indexable, Persistable> previous(Indexable index) throws Exception {
         // 只有milestone使用
         throw new NeededException();
     }
 
-    @Override
     public Pair<Indexable, Persistable> first(Class<?> indexModel) throws Exception {
         // rescrn操作使用, 实际什么都不用做
         return new Pair<>(null, null);

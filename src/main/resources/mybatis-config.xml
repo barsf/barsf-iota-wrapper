@@ -10,6 +10,7 @@
     <properties>
         <property name="driver" value="com.mysql.jdbc.Driver"/>
         <!--<property name="url" value="jdbc:mysql://localhost:3306/iota"/>-->
+        <!--<property name="url" value="jdbc:mysql://35.201.245.54:3306/iota"/>-->
         <property name="url" value="jdbc:mysql://google/iota?cloudSqlInstance=m1120901032:asia-east1:barsf&amp;socketFactory=com.google.cloud.sql.mysql.SocketFactory"/>
         <property name="username" value="root"/>
         <property name="password" value="root"/>
@@ -36,7 +37,7 @@
                 <property name="jdbcUrl" value="${url}"/>
                 <property name="username" value="${username}"/>
                 <property name="password" value="${password}"/>
-                <property name="maximumPoolSize" value="80"/>
+                <property name="maximumPoolSize" value="30"/>
                 <property name="minimumIdle" value="6"/>
                 <property name="connectionTestQuery" value="select 1"/>
                 <property name="autoCommit" value="true"/>

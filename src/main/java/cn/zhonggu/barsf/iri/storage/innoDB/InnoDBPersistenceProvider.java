@@ -192,13 +192,13 @@ public class InnoDBPersistenceProvider implements PersistenceProvider {
         } else if (model == StateDiff.class) {
             return stateDiffProvider.get(index);
         } else if (model == Address.class) {
-            return addressProvider.get(index);
+            return addressProvider.getFromTransaction(index);
         } else if (model == Approvee.class) {
-            return approveeProvider.get(index);
+            return approveeProvider.getFromTransaction(index);
         } else if (model == Bundle.class) {
-            return bundleProvider.get(index);
+            return bundleProvider.getFromTransaction(index);
         } else if (model == Tag.class) {
-            return tagProvider.get(index);
+            return tagProvider.getFromTransaction(index);
         }
         throw new RuntimeException("Unknown type!");
     }

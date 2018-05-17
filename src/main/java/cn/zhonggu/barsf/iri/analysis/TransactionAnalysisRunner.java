@@ -5,7 +5,6 @@ import cn.zhonggu.barsf.iri.modelWrapper.TransactionWrapper;
 import cn.zhonggu.barsf.iri.storage.innoDB.mybatis.DbHelper;
 import cn.zhonggu.barsf.iri.storage.innoDB.mybatis.subProvider.AddressProvider;
 import cn.zhonggu.barsf.iri.storage.innoDB.mybatis.subProvider.TransactionProvider;
-import com.iota.iri.model.Address;
 import com.iota.iri.model.Hash;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
@@ -32,7 +31,7 @@ public class TransactionAnalysisRunner implements Runnable {
 
     public static void selfCall() {
         ScheduledExecutorService singleTread = Executors.newSingleThreadScheduledExecutor();
-        singleTread.scheduleWithFixedDelay(new TransactionAnalysisRunner(), 30, 30, TimeUnit.SECONDS);
+        singleTread.scheduleWithFixedDelay(new TransactionAnalysisRunner(), 3, 30, TimeUnit.SECONDS);
     }
 
     @Override
@@ -41,17 +40,21 @@ public class TransactionAnalysisRunner implements Runnable {
         long start = System.currentTimeMillis();
         final AtomicInteger done = new AtomicInteger(0);
         SqlSession session = DbHelper.getSingletonSessionFactory().openSession(ExecutorType.SIMPLE, false);
+
         try {
             // 单线程  因此未加锁
             List<TransactionWrapper> manyTransactions = tacProvider.selectNeedProcessTrans(BATCH_SIZE, session);
+
             manyTransactions.forEach(tac -> {
                 if (!tac.getIsProcessed()) {
                     try {
-                        Address aAddress = (Address) addProvider.get(new Hash(tac.getAddress()));
-                        AddressWrapper addressWrapper = new AddressWrapper(aAddress.set);
-                        addressWrapper.setHash(tac.getAddress());
-                        addressWrapper.setBalance(addressWrapper.getBalance() == null ? tac.getValue() : addressWrapper.getBalance() + tac.getValue());
-                        boolean ret = addProvider.save(addressWrapper, new Hash(addressWrapper.getHash()), session);
+                        AddressWrapper aAddress =  addProvider.get(tac.getAddress(),session);
+                        if (aAddress == null){
+                            aAddress = new AddressWrapper();
+                        }
+                        aAddress.setHash(tac.getAddress());
+                        aAddress.setBalance(aAddress.getBalance() + tac.getValue());
+                        boolean ret = addProvider.save(aAddress, new Hash(aAddress.getHash()), session);
                         if (!ret) {
                             throw new RuntimeException("should't happened!");
                         }
@@ -70,11 +73,10 @@ public class TransactionAnalysisRunner implements Runnable {
                         tacProvider.updateByPrimaryKeySelective(tac, session);
                         done.incrementAndGet();
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        log.error("",e);
                     }
                 }
             });
-
             session.commit();
             log.info("TransactionAnalysis finished, do <" + manyTransactions.size() + ">,done <" + done.get() + "> cost <" + (System.currentTimeMillis() - start) + ">");
 
