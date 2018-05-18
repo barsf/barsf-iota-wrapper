@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/barsf-iri.iml" filepath="$PROJECT_DIR$/barsf-iri.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/barsf-iri.iml" filepath="$PROJECT_DIR$/.idea/modules/barsf-iri.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/barsf-iri_main.iml" filepath="$PROJECT_DIR$/.idea/modules/barsf-iri_main.iml" group="barsf-iri" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/barsf-iri_test.iml" filepath="$PROJECT_DIR$/.idea/modules/barsf-iri_test.iml" group="barsf-iri" />
     </modules>
   </component>
 </project>

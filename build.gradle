@@ -1,0 +1,42 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+
+group = 'cn.zhonggu'
+version = '0.0.1-SNAPSHOT'
+
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+
+repositories {
+    maven {
+        url "https://nexus.zhonggu.cn/content/repositories/releases"
+        credentials {
+            username = "deployment"
+            password = "1cfzoddwsc03audmgzu5annyccgc"
+        }
+    }
+    maven {
+        url "https://nexus.zhonggu.cn/content/repositories/snapshots"
+        credentials {
+            username = "deployment"
+            password = "1cfzoddwsc03audmgzu5annyccgc"
+        }
+    }
+    mavenCentral()
+}
+
+
+dependencies {
+    compile group: 'ch.qos.logback', name: 'logback-classic', version:'1.2.3'
+    compile group: 'com.google.cloud.sql', name: 'mysql-socket-factory', version:'1.0.0'
+    compile group: 'org.mybatis', name: 'mybatis', version:'3.4.5'
+    compile group: 'tk.mybatis', name: 'mapper', version:'4.0.1'
+    compile group: 'org.eclipse.persistence', name: 'javax.persistence', version:'2.1.1'
+    compile group: 'com.zaxxer', name: 'HikariCP', version:'2.7.6'
+    compile group: 'mysql', name: 'mysql-connector-java', version:'5.1.45'
+
+    // 本地iota-iri jar包  *可以把他放在项目目录里*
+    compile files('G:\\Work\\iri-1.4.2.4\\target\\iri-1.4.2.4.jar')
+}

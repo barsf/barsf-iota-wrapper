@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: com.google.apis:google-api-services-sqladmin:v1beta4-rev19-1.21.0">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.apis/google-api-services-sqladmin/v1beta4-rev19-1.21.0/663d9c4cb4c90f70d92185c15150f58f3622d9d4/google-api-services-sqladmin-v1beta4-rev19-1.21.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.apis/google-api-services-sqladmin/v1beta4-rev19-1.21.0/c5a19ce829376631dfb37b302bc4064934ec5e49/google-api-services-sqladmin-v1beta4-rev19-1.21.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module external.linked.project.id="barsf-iri:test" external.linked.project.path="$MODULE_DIR$/../.." external.root.project.path="$MODULE_DIR$/../.." external.system.id="GRADLE" external.system.module.group="cn.zhonggu" external.system.module.type="sourceSet" external.system.module.version="0.0.1-SNAPSHOT" type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8">
+    <output-test url="file://$MODULE_DIR$/../../out/test/classes" />
+    <exclude-output />
+    <content url="file://$MODULE_DIR$/../../src/test">
+      <sourceFolder url="file://$MODULE_DIR$/../../src/test/java" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/../../src/test/resources" type="java-test-resource" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="barsf-iri_main" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://G:/Work/iri-1.4.2.4/target/iri-1.4.2.4.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="library" name="Gradle: ch.qos.logback:logback-classic:1.2.3" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.cloud.sql:mysql-socket-factory:1.0.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.mybatis:mybatis:3.4.5" level="project" />
+    <orderEntry type="library" name="Gradle: tk.mybatis:mapper:4.0.1" level="project" />
+    <orderEntry type="library" name="Gradle: org.eclipse.persistence:javax.persistence:2.1.1" level="project" />
+    <orderEntry type="library" name="Gradle: com.zaxxer:HikariCP:2.7.6" level="project" />
+    <orderEntry type="library" name="Gradle: mysql:mysql-connector-java:5.1.45" level="project" />
+    <orderEntry type="library" name="Gradle: ch.qos.logback:logback-core:1.2.3" level="project" />
+    <orderEntry type="library" name="Gradle: org.slf4j:slf4j-api:1.7.25" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.apis:google-api-services-sqladmin:v1beta4-rev19-1.21.0" level="project" />
+    <orderEntry type="library" name="Gradle: javax.persistence:persistence-api:1.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.api-client:google-api-client:1.21.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.oauth-client:google-oauth-client:1.21.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.http-client:google-http-client-jackson2:1.21.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.guava:guava-jdk5:17.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.http-client:google-http-client:1.21.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.code.findbugs:jsr305:1.3.9" level="project" />
+    <orderEntry type="library" name="Gradle: com.fasterxml.jackson.core:jackson-core:2.1.3" level="project" />
+    <orderEntry type="library" name="Gradle: org.apache.httpcomponents:httpclient:4.0.1" level="project" />
+    <orderEntry type="library" name="Gradle: org.apache.httpcomponents:httpcore:4.0.1" level="project" />
+    <orderEntry type="library" name="Gradle: commons-logging:commons-logging:1.1.1" level="project" />
+    <orderEntry type="library" name="Gradle: commons-codec:commons-codec:1.3" level="project" />
+  </component>
+  <component name="TestModuleProperties" production-module="barsf-iri_main" />
+</module>

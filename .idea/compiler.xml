@@ -6,11 +6,12 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="barsf-iri" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="barsf-iri" target="1.8" />
+      <module name="barsf-iri_main" target="1.8" />
+      <module name="barsf-iri_test" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>
