@@ -1,6 +1,6 @@
 package cn.zhonggu.barsf.iri.warp;
 
-import cn.zhonggu.barsf.iri.analysis.TransactionAnalysisRunner;
+import cn.zhonggu.barsf.iri.runner.TransactionAnalysisRunner;
 import com.iota.iri.IXI;
 import com.iota.iri.conf.Configuration;
 import org.slf4j.Logger;
@@ -14,6 +14,7 @@ import java.io.IOException;
  */
 public class BarsfIRI extends com.iota.iri.IRI {
     private static final Logger log = LoggerFactory.getLogger(BarsfIRI.class);
+    private static APIWrapper apiWrapper;
 
     public static void main(String[] args) throws IOException {
         configuration = new Configuration();
@@ -22,7 +23,7 @@ public class BarsfIRI extends com.iota.iri.IRI {
         log.info("Welcome to {} {}", configuration.booling(Configuration.DefaultConfSettings.TESTNET) ? TESTNET_NAME : MAINNET_NAME, VERSION);
         iota = new IotaWrapper(configuration);
         ixi = new IXI(iota);
-        APIWrapper apiWrapper = new APIWrapper(iota, ixi);
+        apiWrapper = new APIWrapper(iota, ixi);
         shutdownHook();
 
         if (configuration.booling(Configuration.DefaultConfSettings.DEBUG)) {
