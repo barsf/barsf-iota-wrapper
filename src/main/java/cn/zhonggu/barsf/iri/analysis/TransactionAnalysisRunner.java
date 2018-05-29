@@ -22,7 +22,10 @@ public class TransactionAnalysisRunner implements Runnable {
 
     private static final int BATCH_SIZE = 500;
     // TODO: 2018/5/4  判断内容
-    private static final String BARSF_TRANS_TAG = "????????";
+    private static final String BARSF_TRANS_COMMAND_TAG = "BARSF9COMMAND9";
+    private static final String BARSF_TRANS_MILESTONE_TAG = "BARSF9MILESTONE9";
+    private static final int BARSF_TRANS_TYPE = 2;
+    private static final int NOT_BARSF_TRANS_TYPE = 1;
     private static final String BARSF_TRANS_ADDRESS = "!!!!!!!";
 
 
@@ -61,14 +64,7 @@ public class TransactionAnalysisRunner implements Runnable {
 
                         tac.setIsProcessed(true);
 
-                        // 验证是不是barsf交易
-                        if (isBacTransaction(tac)) {
-                            // 状态为2表示初筛通过
-                            tac.setBarsfTransaction(2);
-                        } else {
-                            // 状态为1表示不是barsf交易
-                            tac.setBarsfTransaction(1);
-                        }
+                        updateTransactionToBarsf(tac);
 
                         tacProvider.updateByPrimaryKeySelective(tac, session);
                         done.incrementAndGet();
@@ -94,15 +90,30 @@ public class TransactionAnalysisRunner implements Runnable {
 
     }
 
+    public static void updateTransactionToBarsf(TransactionWrapper tac) {
+        // 验证是不是barsf交易
+        if (isBacTransaction(tac)) {
+            // 状态为2表示初筛通过
+            tac.setBarsfTransaction(BARSF_TRANS_TYPE);
+        } else {
+            // 状态为1表示不是barsf交易
+            tac.setBarsfTransaction(NOT_BARSF_TRANS_TYPE);
+        }
+    }
 
-    private boolean isBacTransaction(TransactionWrapper tac) {
+    private static boolean isBacTransaction(TransactionWrapper tac) {
         // address检查
         if (!tac.getAddress().equals(BARSF_TRANS_ADDRESS)) {
             return false;
         }
 
         // tag包含特定字符
-        if (!tac.getTag().startsWith(BARSF_TRANS_TAG)) {
+        if (!tac.getTag().startsWith(BARSF_TRANS_COMMAND_TAG)) {
+            return false;
+        }
+
+        // tag包含里程碑字符
+        if (!tac.getTag().startsWith(BARSF_TRANS_MILESTONE_TAG)) {
             return false;
         }
 
@@ -111,6 +122,6 @@ public class TransactionAnalysisRunner implements Runnable {
     }
 
     public static void main(String[] args) {
-        System.out.println("TYPPITYPPI99999999999999999".contains(BARSF_TRANS_TAG));
+        System.out.println("TYPPITYPPI99999999999999999".contains(BARSF_TRANS_COMMAND_TAG));
     }
 }

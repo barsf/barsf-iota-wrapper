@@ -1,5 +1,6 @@
 package cn.zhonggu.barsf.iri.storage.innoDB.mybatis.subProvider;
 
+import cn.zhonggu.barsf.iri.analysis.TransactionAnalysisRunner;
 import cn.zhonggu.barsf.iri.modelWrapper.TransactionWrapper;
 import cn.zhonggu.barsf.iri.modelWrapper.TransactionEx;
 import cn.zhonggu.barsf.iri.storage.innoDB.mybatis.DbHelper;
@@ -61,7 +62,6 @@ public class TransactionProvider implements SubPersistenceProvider {
         mapper.insertOrUpdate(target);
         TransactionTrytesMapper exMapper = outSession.getMapper(TransactionTrytesMapper.class);
         exMapper.insertOrUpdate(target.getInnerTrytes());
-
         // 不报错即为true
         return true;
     }
@@ -89,6 +89,7 @@ public class TransactionProvider implements SubPersistenceProvider {
             Indexable index = cachedTrans.low;
             TransactionMapper mapper = session.getMapper(TransactionMapper.class);
             thing.filling(index);
+            TransactionAnalysisRunner.updateTransactionToBarsf(thing);
             if (updateOnDpk) {
                 mapper.insertOrUpdate(thing);
             } else {
