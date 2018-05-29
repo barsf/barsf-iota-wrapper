@@ -1,4 +1,4 @@
-package cn.zhonggu.barsf.iri.analysis;
+package cn.zhonggu.barsf.iri.runner;
 
 import cn.zhonggu.barsf.iri.modelWrapper.*;
 import cn.zhonggu.barsf.iri.storage.innoDB.mybatis.DbHelper;
@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
  * Created by ZhuDH on 2018/4/11.
  */
 public class RodbDataFishingRunner implements Runnable {
-    private static final Logger log = LoggerFactory.getLogger(cn.zhonggu.barsf.iri.analysis.RodbDataFishingRunner.class);
+    private static final Logger log = LoggerFactory.getLogger(cn.zhonggu.barsf.iri.runner.RodbDataFishingRunner.class);
     private static final int MAX_BATCH_SIZE = 6000;
     private RocksDB db;
     private DBOptions options;
@@ -248,22 +248,22 @@ public class RodbDataFishingRunner implements Runnable {
         log.info("this turn finished, syncd <" + size + "> cost<" + (System.currentTimeMillis() - startAt) + "ms> <" + ((double) size / ((System.currentTimeMillis() - startAt) / 1000.0) + " r/s>"));
     }
 
-    private cn.zhonggu.barsf.iri.analysis.KvEnum tellMeWhatIsTheKey(Class nowClass) {
-        cn.zhonggu.barsf.iri.analysis.KvEnum key;
+    private cn.zhonggu.barsf.iri.runner.KvEnum tellMeWhatIsTheKey(Class nowClass) {
+        cn.zhonggu.barsf.iri.runner.KvEnum key;
         if (nowClass == Transaction.class) {
-            key = cn.zhonggu.barsf.iri.analysis.KvEnum.transaction;
+            key = cn.zhonggu.barsf.iri.runner.KvEnum.transaction;
         } else if (nowClass == Milestone.class) {
-            key = cn.zhonggu.barsf.iri.analysis.KvEnum.milestone;
+            key = cn.zhonggu.barsf.iri.runner.KvEnum.milestone;
         } else if (nowClass == StateDiff.class) {
-            key = cn.zhonggu.barsf.iri.analysis.KvEnum.statediff;
+            key = cn.zhonggu.barsf.iri.runner.KvEnum.statediff;
         } else if (nowClass == Address.class) {
-            key = cn.zhonggu.barsf.iri.analysis.KvEnum.address;
+            key = cn.zhonggu.barsf.iri.runner.KvEnum.address;
         } else if (nowClass == Approvee.class) {
-            key = cn.zhonggu.barsf.iri.analysis.KvEnum.approvee;
+            key = cn.zhonggu.barsf.iri.runner.KvEnum.approvee;
         } else if (nowClass == Bundle.class) {
-            key = cn.zhonggu.barsf.iri.analysis.KvEnum.bundle;
+            key = cn.zhonggu.barsf.iri.runner.KvEnum.bundle;
         } else if (nowClass == Tag.class) {
-            key = cn.zhonggu.barsf.iri.analysis.KvEnum.tag;
+            key = cn.zhonggu.barsf.iri.runner.KvEnum.tag;
         } else {
             throw new RuntimeException();
         }
@@ -473,19 +473,19 @@ public class RodbDataFishingRunner implements Runnable {
     private void initLastOneMap() {
 
         Map<Class<?>, Indexable> lastIndexMAp = new HashMap<>();
-        Kv transactionIndex = kvProvider.getValue(cn.zhonggu.barsf.iri.analysis.KvEnum.transaction.name());
+        Kv transactionIndex = kvProvider.getValue(cn.zhonggu.barsf.iri.runner.KvEnum.transaction.name());
         lastIndexMAp.put(Transaction.class, transactionIndex == null ? Hash.NULL_HASH : new Hash(transactionIndex.getValueStr()));
-        Kv milestoneIndex = kvProvider.getValue(cn.zhonggu.barsf.iri.analysis.KvEnum.milestone.name());
+        Kv milestoneIndex = kvProvider.getValue(cn.zhonggu.barsf.iri.runner.KvEnum.milestone.name());
         lastIndexMAp.put(Milestone.class, milestoneIndex == null ? new IntegerIndex(0) : new IntegerIndex(Integer.parseInt(milestoneIndex.getValueStr())));
-        Kv stateDiffIndex = kvProvider.getValue(cn.zhonggu.barsf.iri.analysis.KvEnum.statediff.name());
+        Kv stateDiffIndex = kvProvider.getValue(cn.zhonggu.barsf.iri.runner.KvEnum.statediff.name());
         lastIndexMAp.put(StateDiff.class, stateDiffIndex == null ? Hash.NULL_HASH : new Hash(stateDiffIndex.getValueStr()));
-        Kv addressIndex = kvProvider.getValue(cn.zhonggu.barsf.iri.analysis.KvEnum.address.name());
+        Kv addressIndex = kvProvider.getValue(cn.zhonggu.barsf.iri.runner.KvEnum.address.name());
         lastIndexMAp.put(Address.class, addressIndex == null ? Hash.NULL_HASH : new Hash(addressIndex.getValueStr()));
-        Kv approveeIndex = kvProvider.getValue(cn.zhonggu.barsf.iri.analysis.KvEnum.approvee.name());
+        Kv approveeIndex = kvProvider.getValue(cn.zhonggu.barsf.iri.runner.KvEnum.approvee.name());
         lastIndexMAp.put(Approvee.class, approveeIndex == null ? Hash.NULL_HASH : new Hash(approveeIndex.getValueStr()));
-        Kv bundleIndex = kvProvider.getValue(cn.zhonggu.barsf.iri.analysis.KvEnum.bundle.name());
+        Kv bundleIndex = kvProvider.getValue(cn.zhonggu.barsf.iri.runner.KvEnum.bundle.name());
         lastIndexMAp.put(Bundle.class, bundleIndex == null ? Hash.NULL_HASH : new Hash(bundleIndex.getValueStr()));
-        Kv tagIndex = kvProvider.getValue(cn.zhonggu.barsf.iri.analysis.KvEnum.tag.name());
+        Kv tagIndex = kvProvider.getValue(cn.zhonggu.barsf.iri.runner.KvEnum.tag.name());
         lastIndexMAp.put(Tag.class, tagIndex == null ? Hash.NULL_HASH : new Hash(tagIndex.getValueStr()));
         log.info("last one map init success");
         lastIndexMap.set(lastIndexMAp);

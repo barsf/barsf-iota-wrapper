@@ -9,6 +9,8 @@ import java.util.zip.DataFormatException;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
 
+import static com.iota.iri.controllers.TransactionViewModel.TRINARY_SIZE;
+
 public class Converter {
 
     public static final int RADIX = 3;
@@ -140,6 +142,15 @@ public class Converter {
             trytes.append(TRYTE_ALPHABET.charAt(j));
         }
         return trytes.toString();
+    }
+
+    public static int[] trits(byte[] transactionBytes) {
+        int[] trits;
+        trits = new int[TRINARY_SIZE];
+        if (transactionBytes != null) {
+            getTrits(transactionBytes, trits);
+        }
+        return trits;
     }
 
     public static String trytes(final int[] trits) {

@@ -1,4 +1,4 @@
-package cn.zhonggu.barsf.iri.analysis;
+package cn.zhonggu.barsf.iri.runner;
 
 import cn.zhonggu.barsf.iri.modelWrapper.AddressWrapper;
 import cn.zhonggu.barsf.iri.modelWrapper.TransactionWrapper;

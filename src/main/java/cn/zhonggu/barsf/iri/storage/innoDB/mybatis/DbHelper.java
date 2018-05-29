@@ -37,7 +37,6 @@ public class DbHelper {
             // 注册通用Mapper
             mapperHelper.registerMapper(IotaEntryBaseMapper.class);
             mapperHelper.processConfiguration(ssFactory.getConfiguration());
-
         }
     }
     
