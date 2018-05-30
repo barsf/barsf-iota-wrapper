@@ -1,8 +1,8 @@
 package cn.zhonggu.barsf.iri.storage.innoDB.mybatis.subProvider;
 
-import cn.zhonggu.barsf.iri.analysis.TransactionAnalysisRunner;
 import cn.zhonggu.barsf.iri.modelWrapper.TransactionWrapper;
 import cn.zhonggu.barsf.iri.modelWrapper.TransactionEx;
+import cn.zhonggu.barsf.iri.runner.TransactionAnalysisRunner;
 import cn.zhonggu.barsf.iri.storage.innoDB.mybatis.DbHelper;
 import cn.zhonggu.barsf.iri.storage.innoDB.mybatis.modelMapper.TransactionMapper;
 import cn.zhonggu.barsf.iri.storage.innoDB.mybatis.modelMapper.TransactionTrytesMapper;
