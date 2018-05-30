@@ -38,5 +38,30 @@ dependencies {
     compile group: 'mysql', name: 'mysql-connector-java', version:'5.1.45'
 
     // 本地iota-iri jar包  *可以把他放在项目目录里*
-    compile files('G:\\Work\\iri-1.4.2.4\\target\\iri-1.4.2.4.jar')
+    compile files('lib\\iri-1.4.2.4.jar')
 }
+apply plugin: 'application'
+mainClassName = 'cn.zhonggu.barsf.iri.BarsfIriStartup'
+
+task runnbaleJar(type: Jar) {
+    from files(sourceSets.main.output.resourcesDir)
+    from files(sourceSets.main.output.classesDirs)
+//    from configurations.runtime.asFileTree.files.collect { zipTree(it) }
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }{exclude "logback.xml"}
+    manifest { attributes 'Main-Class':'cn.zhonggu.barsf.iri.BarsfIriStartup' }
+    exclude('LICENSE.txt', 'NOTICE.txt', 'rootdoc.txt')
+    exclude 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/*.DSA'
+    exclude 'META-INF/NOTICE', 'META-INF/NOTICE.txt'
+    exclude 'META-INF/LICENSE', 'META-INF/LICENSE.txt'
+    exclude 'META-INF/DEPENDENCIES'
+}
+
+task aa(){
+    println(sourceSets.main.output.resourcesDir)
+}
+
+runnbaleJar.doFirst {
+    delete 'deploy'
+    delete 'out'
+}
+runnbaleJar.dependsOn build
