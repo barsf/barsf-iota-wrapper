@@ -14,17 +14,17 @@ import java.util.Collection;
 public class AddressWrapper extends HashesWrapper {
     public AddressWrapper() {
     }
-    private Long balance = 0L;
+//    private Long balance = 0L;
 
     private Long barsfBalance = 0L;
 
-    public Long getBalance() {
-        return balance;
-    }
-
-    public void setBalance(Long balance) {
-        this.balance = balance;
-    }
+//    public Long getBalance() {
+//        return balance;
+//    }
+//
+//    public void setBalance(Long balance) {
+//        this.balance = balance;
+//    }
 
     public Long getBarsfBalance() {
         return barsfBalance;

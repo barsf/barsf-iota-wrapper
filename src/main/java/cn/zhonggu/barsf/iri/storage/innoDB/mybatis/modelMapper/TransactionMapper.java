@@ -13,7 +13,7 @@ import java.util.List;
  */
 public interface TransactionMapper extends IotaEntryBaseMapper<TransactionWrapper> {
 
-    @Select("select * from t_transaction where is_processed = 0 and snapshot > 0 limit #{batchSize}")
+    @Select("select * from t_transaction where barsf_transaction = 0 and snapshot > 0 limit #{batchSize}")
     List<TransactionWrapper> selectNeedProcess(@Param("batchSize") int batchSize);
 
     // 专为地址查询TransHash优化

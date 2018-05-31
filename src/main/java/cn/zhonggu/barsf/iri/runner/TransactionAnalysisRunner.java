@@ -49,20 +49,21 @@ public class TransactionAnalysisRunner implements Runnable {
             List<TransactionWrapper> manyTransactions = tacProvider.selectNeedProcessTrans(BATCH_SIZE, session);
 
             manyTransactions.forEach(tac -> {
-                if (!tac.getIsProcessed()) {
+//                if (!tac.getIsProcessed()) {
+                if (tac.getBarsfTransaction() == 0) {
                     try {
-                        AddressWrapper aAddress =  addProvider.get(tac.getAddress(),session);
-                        if (aAddress == null){
-                            aAddress = new AddressWrapper();
-                        }
-                        aAddress.setHash(tac.getAddress());
-                        aAddress.setBalance(aAddress.getBalance() + tac.getValue());
-                        boolean ret = addProvider.save(aAddress, new Hash(aAddress.getHash()), session);
-                        if (!ret) {
-                            throw new RuntimeException("should't happened!");
-                        }
+//                        AddressWrapper aAddress =  addProvider.get(tac.getAddress(),session);
+//                        if (aAddress == null){
+//                            aAddress = new AddressWrapper();
+//                        }
+//                        aAddress.setHash(tac.getAddress());
+//                        aAddress.setBalance(aAddress.getBalance() + tac.getValue());
+//                        boolean ret = addProvider.save(aAddress, new Hash(aAddress.getHash()), session);
+//                        if (!ret) {
+//                            throw new RuntimeException("should't happened!");
+//                        }
 
-                        tac.setIsProcessed(true);
+//                        tac.setIsProcessed(true);
 
                         updateTransactionToBarsf(tac);
 

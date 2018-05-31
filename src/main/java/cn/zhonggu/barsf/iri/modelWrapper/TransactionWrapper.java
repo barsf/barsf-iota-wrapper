@@ -44,7 +44,7 @@ public class TransactionWrapper{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "Mysql")
     private String hash;
-    private Boolean isProcessed = false;
+//    private Boolean isProcessed = false;
     private Integer barsfTransaction = 0;
     // 注意,这个字段已经被分隔到另一张表中 [TransactionEx],当前它的作用是iri需要
     @Transient
@@ -83,7 +83,7 @@ public class TransactionWrapper{
     public static TransactionWrapper emptyTrans(String hash) {
         TransactionWrapper emptyTrans = new TransactionWrapper();
         emptyTrans.hash = hash;
-        emptyTrans.isProcessed = null;
+//        emptyTrans.isProcessed = null;
         emptyTrans.barsfTransaction = null;
         emptyTrans.address = null;
         emptyTrans.bundle = null;
@@ -110,9 +110,9 @@ public class TransactionWrapper{
     }
 
     /* get方法 */
-    public Boolean getIsProcessed() {
-        return isProcessed;
-    }
+//    public Boolean getIsProcessed() {
+//        return isProcessed;
+//    }
 
     public Integer getBacNode() {
         return barsfTransaction;
@@ -247,9 +247,9 @@ public class TransactionWrapper{
         this.tag = new Hash(tag);
     }
 
-    public void setIsProcessed(Boolean processed) {
-        isProcessed = processed;
-    }
+//    public void setIsProcessed(Boolean processed) {
+//        isProcessed = processed;
+//    }
 
     public void setBarsfTransaction(Integer barsfTransaction) {
         this.barsfTransaction = barsfTransaction;
