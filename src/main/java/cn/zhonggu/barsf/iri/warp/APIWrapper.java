@@ -1,7 +1,7 @@
 package cn.zhonggu.barsf.iri.warp;
 
 import cn.zhonggu.barsf.iri.modelWrapper.AddressWrapper;
-import cn.zhonggu.barsf.iri.service.dto.GetAddressResponse;
+import cn.zhonggu.barsf.iri.service.dto.GetBarsfBalancesResponse;
 import cn.zhonggu.barsf.iri.service.dto.TestResponse;
 import cn.zhonggu.barsf.iri.storage.innoDB.mybatis.DbHelper;
 import cn.zhonggu.barsf.iri.storage.innoDB.mybatis.modelMapper.AddressMapper;
@@ -9,18 +9,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.iota.iri.*;
 import com.iota.iri.conf.Configuration;
-import com.iota.iri.controllers.AddressViewModel;
-import com.iota.iri.controllers.BundleViewModel;
-import com.iota.iri.controllers.TagViewModel;
-import com.iota.iri.controllers.TransactionViewModel;
-import com.iota.iri.hash.Curl;
-import com.iota.iri.hash.PearlDiver;
 import com.iota.iri.model.Hash;
-import com.iota.iri.network.Neighbor;
-import com.iota.iri.service.API;
 import com.iota.iri.service.ValidationException;
 import com.iota.iri.service.dto.*;
-import com.iota.iri.utils.Converter;
 import com.iota.iri.utils.MapIdentityManager;
 import io.undertow.Undertow;
 import io.undertow.security.api.AuthenticationMechanism;
@@ -46,8 +37,6 @@ import java.io.*;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.net.InetSocketAddress;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -227,22 +216,9 @@ public class APIWrapper {
                     return TestResponse.create(guys);
                 }
 
-                case "getAddress": {
+                case "getBarsfBalances": {
                     final List<String> addresses = getParameterAsList(request, "addresses", HASH_SIZE);
-                    HashMap<String, AddressWrapper> resultMap = new HashMap<>();
-
-                    // todo 可以在subProvider中直接提供方法
-                    try (final SqlSession session = DbHelper.getSingletonSessionFactory().openSession(true)) {
-                        AddressMapper mapper = session.getMapper(AddressMapper.class);
-                        for (String address : addresses) {
-                            AddressWrapper anAddress = mapper.selectByPrimaryKey(address);
-                            if(anAddress!=null) {
-                                resultMap.put(anAddress.getHash(), anAddress);
-                            }
-                        }
-                    }
-
-                    return GetAddressResponse.create(resultMap);
+                    return getBarsfBalancesStatement(addresses);
                 }
                 default: {
                     AbstractResponse response = ixi.processCommand(command, request);
@@ -259,6 +235,26 @@ public class APIWrapper {
             log.error("API Exception: ", e);
             return ExceptionResponse.create(e.getLocalizedMessage());
         }
+    }
+
+    private AbstractResponse getBarsfBalancesStatement(final List<String> addrss){
+        List<Long> balances = new ArrayList<>();
+        //目前获取的是iota的milestone和index
+        final List<Hash> reference = Collections.singletonList(instance.milestone.latestSolidSubtangleMilestone);
+        final int milestoneIndex = instance.milestone.latestSnapshot.index();
+        // todo 可以在subProvider中直接提供方法
+        try (final SqlSession session = DbHelper.getSingletonSessionFactory().openSession(true)) {
+            AddressMapper mapper = session.getMapper(AddressMapper.class);
+            for (String address : addrss) {
+                AddressWrapper anAddress = mapper.selectByPrimaryKey(address);
+                if(anAddress != null) {
+                    balances.add(anAddress.getBarsfBalance());
+                }else {
+                    balances.add((long) 0);
+                }
+            }
+        }
+        return GetBarsfBalancesResponse.create(balances, reference.stream().map(h -> h.toString()).collect(Collectors.toList()), milestoneIndex);
     }
 
 
