@@ -293,7 +293,7 @@ public class APIWrapper {
             throws IOException {
         res.setDuration((int) (System.currentTimeMillis() - beginningTime));
         final String response = gson.toJson(res);
-
+        log.debug(" -> responseJson:"+response);
         if (res instanceof ErrorResponse) {
             exchange.setStatusCode(400); // bad request
         } else if (res instanceof AccessLimitedResponse) {
