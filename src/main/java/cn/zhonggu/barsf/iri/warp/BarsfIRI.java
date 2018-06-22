@@ -2,6 +2,7 @@ package cn.zhonggu.barsf.iri.warp;
 
 import cn.zhonggu.barsf.iri.runner.TransactionAnalysisRunner;
 import com.iota.iri.IXI;
+import com.iota.iri.Iota;
 import com.iota.iri.conf.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,16 +15,24 @@ import java.io.IOException;
  */
 public class BarsfIRI extends com.iota.iri.IRI {
     private static final Logger log = LoggerFactory.getLogger(BarsfIRI.class);
-    private static APIWrapper apiWrapper;
+    public static IotaWrapper iota;
+    public static APIWrapper api;
+    public static IXI ixi;
+    public static Configuration configuration;
 
     public static void main(String[] args) throws IOException {
+        configureLogging();
+
         configuration = new Configuration();
-        validateParams(configuration, args);
+        if (!validateParams(configuration, args)) {
+            printUsage();
+            return;
+        }
 
         log.info("Welcome to {} {}", configuration.booling(Configuration.DefaultConfSettings.TESTNET) ? TESTNET_NAME : MAINNET_NAME, VERSION);
         iota = new IotaWrapper(configuration);
         ixi = new IXI(iota);
-        apiWrapper = new APIWrapper(iota, ixi);
+        api = new APIWrapper(iota, ixi);
         shutdownHook();
 
         if (configuration.booling(Configuration.DefaultConfSettings.DEBUG)) {
@@ -55,7 +64,7 @@ public class BarsfIRI extends com.iota.iri.IRI {
 
         try {
             iota.init();
-            apiWrapper.init();
+            api.init();
             ixi.init(configuration.string(Configuration.DefaultConfSettings.IXI_DIR));
         } catch (final Exception e) {
             log.error("Exception during IOTA node initialisation: ", e);
@@ -81,5 +90,44 @@ public class BarsfIRI extends com.iota.iri.IRI {
             }
 
         }, "Shutdown Hook"));
+    }
+
+    private static void printUsage() {
+        log.info("Usage: java -jar {}-{}.jar " +
+                        "[{-n,--neighbors} '<list of neighbors>'] " +
+                        "[{-p,--port} 14265] " +
+                        "[{-c,--config} 'config-file-name'] " +
+                        "[{-u,--udp-receiver-port} 14600] " +
+                        "[{-t,--tcp-receiver-port} 15600] " +
+                        "[{-d,--debug} false] " +
+                        "[{--testnet} false]" +
+                        "[{--remote} false]" +
+                        "[{--remote-auth} string]" +
+                        "[{--remote-limit-api} string]"
+                , MAINNET_NAME, VERSION);
+    }
+
+    private static void configureLogging() {
+        String config = System.getProperty("logback.configurationFile");
+        String level = System.getProperty("logging-level", "").toUpperCase();
+        switch (level) {
+            case "OFF":
+            case "ERROR":
+            case "WARN":
+            case "INFO":
+            case "DEBUG":
+            case "TRACE":
+                break;
+            case "ALL":
+                level = "TRACE";
+                break;
+            default:
+                level = "INFO";
+        }
+        System.getProperties().put("logging-level", level);
+        System.out.println("Logging - property 'logging-level' set to: [" + level + "]");
+        if (config != null) {
+            System.out.println("Logging - alternate logging configuration file specified at: '" + config + "'");
+        }
     }
 }

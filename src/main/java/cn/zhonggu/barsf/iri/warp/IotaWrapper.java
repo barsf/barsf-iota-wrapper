@@ -8,11 +8,13 @@ import com.iota.iri.model.Transaction;
 import com.iota.iri.storage.FileExportProvider;
 import com.iota.iri.storage.ZmqPublishProvider;
 
+import java.io.IOException;
+
 /**
  * Created by paul on 5/19/17.
  */
 public class IotaWrapper extends com.iota.iri.Iota {
-    public IotaWrapper(Configuration configuration) {
+    public IotaWrapper(Configuration configuration) throws IOException {
         super(configuration);
     }
 
@@ -31,7 +33,7 @@ public class IotaWrapper extends com.iota.iri.Iota {
 
         this.milestone.init(SpongeFactory.Mode.CURLP27, this.ledgerValidator, revalidate);
         this.transactionValidator.init(this.testnet, this.configuration.integer(Configuration.DefaultConfSettings.MWM));
-        this.tipsManager.init();
+        this.tipsSolidifier.init();
         this.transactionRequester.init(this.configuration.doubling(Configuration.DefaultConfSettings.P_REMOVE_REQUEST.name()));
         this.udpReceiver.init();
         this.replicator.init();
@@ -62,4 +64,5 @@ public class IotaWrapper extends com.iota.iri.Iota {
             tangle.addPersistenceProvider(new ZmqPublishProvider(messageQ));
         }
     }
+
 }
