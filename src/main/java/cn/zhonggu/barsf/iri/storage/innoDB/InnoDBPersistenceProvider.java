@@ -199,6 +199,8 @@ public class InnoDBPersistenceProvider implements PersistenceProvider {
             return bundleProvider.getFromTransaction(index);
         } else if (model == Tag.class) {
             return tagProvider.getFromTransaction(index);
+        } else if(model == ObsoleteTag.class){
+            return tagProvider.getTransactionFromObsoleteTag(index);
         }
         throw new RuntimeException("Unknown type!");
     }

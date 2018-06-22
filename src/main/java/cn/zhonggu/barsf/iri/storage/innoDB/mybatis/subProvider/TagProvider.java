@@ -112,6 +112,20 @@ public class TagProvider implements SubPersistenceProvider {
             }
         }
     }
+    public Persistable getTransactionFromObsoleteTag(Indexable index) throws Exception {
+        try (final SqlSession session = this.sessionFactory.openSession(true)) {
+            TransactionMapper mapper = session.getMapper(TransactionMapper.class);
+            Example selectHash = new Example(TransactionWrapper.class);
+            selectHash.selectProperties("hash");
+            selectHash.createCriteria().andEqualTo("obsoleteTag", converterIndexableToStr(index));
+            List<TransactionWrapper> hashOfTransByTag = mapper.selectByExample(selectHash);
+            if (hashOfTransByTag.size() > 0) {
+                return new TagWrapper(hashOfTransByTag.stream().map(t -> new Hash(t.getHash())).collect(Collectors.toList())).toTag();
+            } else {
+                return Tag.class.newInstance();
+            }
+        }
+    }
 
     
     public boolean mayExist(Indexable index) throws Exception {
