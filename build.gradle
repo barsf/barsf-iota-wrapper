@@ -29,13 +29,13 @@ repositories {
 
 
 dependencies {
-    compile group: 'ch.qos.logback', name: 'logback-classic', version:'1.2.3'
-    compile group: 'com.google.cloud.sql', name: 'mysql-socket-factory', version:'1.0.0'
-    compile group: 'org.mybatis', name: 'mybatis', version:'3.4.5'
-    compile group: 'tk.mybatis', name: 'mapper', version:'4.0.1'
-    compile group: 'org.eclipse.persistence', name: 'javax.persistence', version:'2.1.1'
-    compile group: 'com.zaxxer', name: 'HikariCP', version:'2.7.6'
-    compile group: 'mysql', name: 'mysql-connector-java', version:'5.1.45'
+    compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
+    compile group: 'com.google.cloud.sql', name: 'mysql-socket-factory', version: '1.0.0'
+    compile group: 'org.mybatis', name: 'mybatis', version: '3.4.5'
+    compile group: 'tk.mybatis', name: 'mapper', version: '4.0.1'
+    compile group: 'org.eclipse.persistence', name: 'javax.persistence', version: '2.1.1'
+    compile group: 'com.zaxxer', name: 'HikariCP', version: '2.7.6'
+    compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.45'
 
     // 本地iota-iri jar包  *可以把他放在项目目录里*
     compile files('lib\\iri-1.4.2.4.jar')
@@ -47,8 +47,8 @@ task runnbaleJar(type: Jar) {
     from files(sourceSets.main.output.resourcesDir)
     from files(sourceSets.main.output.classesDirs)
 //    from configurations.runtime.asFileTree.files.collect { zipTree(it) }
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }{exclude "logback.xml"}
-    manifest { attributes 'Main-Class':'cn.zhonggu.barsf.iri.BarsfIriStartup' }
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } } { exclude "logback.xml" }
+    manifest { attributes 'Main-Class': 'cn.zhonggu.barsf.iri.BarsfIriStartup' }
     exclude('LICENSE.txt', 'NOTICE.txt', 'rootdoc.txt')
     exclude 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/*.DSA'
     exclude 'META-INF/NOTICE', 'META-INF/NOTICE.txt'
@@ -56,7 +56,7 @@ task runnbaleJar(type: Jar) {
     exclude 'META-INF/DEPENDENCIES'
 }
 
-task aa(){
+task aa() {
     println(sourceSets.main.output.resourcesDir)
 }
 
