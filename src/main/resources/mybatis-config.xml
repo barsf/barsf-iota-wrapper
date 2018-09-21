@@ -9,11 +9,10 @@
 
     <properties>
         <property name="driver" value="com.mysql.jdbc.Driver"/>
-        <!--<property name="url" value="jdbc:mysql://localhost:3306/iota"/>-->
-        <!--<property name="url" value="jdbc:mysql://35.201.245.54:3306/iota"/>-->
-        <property name="url" value="jdbc:mysql://google/iota?cloudSqlInstance=m1120901032:asia-east1:barsf&amp;socketFactory=com.google.cloud.sql.mysql.SocketFactory"/>
-        <property name="username" value="root"/>
-        <property name="password" value="root"/>
+        <property name="url" value="jdbc:mysql://xxxxxx/iota"/>
+        <property name="username" value="xxxx"/>
+        <property name="password" value="xxxx"/>
+
     </properties>
 
 
