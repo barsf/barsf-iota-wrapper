@@ -8,7 +8,8 @@ import java.util.List;
  * Created by bfq on 2018/5/31.
  */
 public class GetBarsfBalancesResponse extends AbstractResponse {
-    private List<Long> balances;
+    private List<String> balances;
+    private List<Integer> lastChangedMilestoneIndexes;
 
     //获取地址余额时，对应的barsf里程碑的hash值
     private List<String> reference;
@@ -16,17 +17,18 @@ public class GetBarsfBalancesResponse extends AbstractResponse {
     //里程碑对应的序号
     private int milestoneIndex;
 
-    public GetBarsfBalancesResponse(List<Long> balances, List<String> reference, int milestoneIndex) {
+    public GetBarsfBalancesResponse(List<String> balances, List<String> reference, int milestoneIndex, List<Integer> lastChangedMilestoneIndexes) {
         this.balances = balances;
         this.reference = reference;
         this.milestoneIndex = milestoneIndex;
+        this.lastChangedMilestoneIndexes = lastChangedMilestoneIndexes;
     }
 
-    public List<Long> getBalances() {
+    public List<String> getBalances() {
         return balances;
     }
 
-    public void setBalances(List<Long> balances) {
+    public void setBalances(List<String> balances) {
         this.balances = balances;
     }
 
@@ -46,7 +48,15 @@ public class GetBarsfBalancesResponse extends AbstractResponse {
         this.milestoneIndex = milestoneIndex;
     }
 
-    public static GetBarsfBalancesResponse create(List<Long> balances, List<String> reference, int milestoneIndex) {
-        return new GetBarsfBalancesResponse(balances, reference, milestoneIndex);
+    public List<Integer> getLastChangedMilestoneIndexes() {
+        return lastChangedMilestoneIndexes;
+    }
+
+    public void setLastChangedMilestoneIndexes(List<Integer> lastChangedMilestoneIndexes) {
+        this.lastChangedMilestoneIndexes = lastChangedMilestoneIndexes;
+    }
+
+    public static GetBarsfBalancesResponse create(List<String> balances, List<String> reference, int milestoneIndex, List<Integer> lastChangedMilestoneIndexes) {
+        return new GetBarsfBalancesResponse(balances, reference, milestoneIndex, lastChangedMilestoneIndexes);
     }
 }
