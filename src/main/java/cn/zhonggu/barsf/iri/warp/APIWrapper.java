@@ -136,21 +136,17 @@ public class APIWrapper {
             return;
         }
 
-        if (!SignedFiles.isFileSignatureValid(Configuration.PREVIOUS_EPOCHS_SPENT_ADDRESSES_TXT,
-                Configuration.PREVIOUS_EPOCH_SPENT_ADDRESSES_SIG,
-                Snapshot.SNAPSHOT_PUBKEY, Snapshot.SNAPSHOT_PUBKEY_DEPTH, Snapshot.SPENT_ADDRESSES_INDEX)) {
-            throw new RuntimeException("Failed to load previousEpochsSpentAddresses - signature failed.");
-        }
-
-        InputStream in = Snapshot.class.getResourceAsStream(Configuration.PREVIOUS_EPOCHS_SPENT_ADDRESSES_TXT);
-        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-        String line;
-        try {
-            while ((line = reader.readLine()) != null) {
-                previousEpochsSpentAddresses.put(new Hash(line), true);
+        String[] previousEpochsSpentAddressesFiles = Configuration.PREVIOUS_EPOCHS_SPENT_ADDRESSES_TXT.split(" ");
+        for (String previousEpochsSpentAddressesFile : previousEpochsSpentAddressesFiles) {
+            InputStream in = Snapshot.class.getResourceAsStream(previousEpochsSpentAddressesFile);
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    this.previousEpochsSpentAddresses.put(new Hash(line), true);
+                }
+            } catch (Exception e) {
+                log.error("Failed to load resource: {}.", previousEpochsSpentAddressesFile, e);
             }
-        } catch (IOException e) {
-            log.error("Failed to load previousEpochsSpentAddresses.");
         }
     }
 
@@ -238,7 +234,7 @@ public class APIWrapper {
     }
 
     private AbstractResponse getBarsfBalancesStatement(final List<String> addrss){
-        List<Long> balances = new ArrayList<>();
+        List<String> balances = new ArrayList<>();
         //目前获取的是iota的milestone和index
         final List<Hash> reference = Collections.singletonList(instance.milestone.latestSolidSubtangleMilestone);
         final int milestoneIndex = instance.milestone.latestSnapshot.index();
@@ -248,14 +244,20 @@ public class APIWrapper {
             for (String address : addrss) {
                 AddressWrapper anAddress = mapper.selectByPrimaryKey(address);
                 if(anAddress != null) {
-                    balances.add(anAddress.getBarsfBalance());
+                    balances.add(anAddress.getBarsfBalance()+"");
                 }else {
-                    balances.add((long) 0);
+                    balances.add("10000");
                 }
             }
         }
-        return GetBarsfBalancesResponse.create(balances, reference.stream().map(h -> h.toString()).collect(Collectors.toList()), milestoneIndex);
+        List<Integer> lastChangedMilestoneIndexes = new ArrayList<>();
+        int index = 1600;
+        for(String str : addrss) {
+            lastChangedMilestoneIndexes.add(1600+100);
+        }
+        return GetBarsfBalancesResponse.create(balances, reference.stream().map(h -> h.toString()).collect(Collectors.toList()), milestoneIndex, lastChangedMilestoneIndexes);
     }
+
 
 
     private void validateTrytes(String paramName, int size, String result) throws ValidationException {
